@@ -80,6 +80,7 @@ void clearScreen() {
         : "a" (0x0200), "b" (0x00), "d" (0x0000)
     );
 }
+
 void echo(char* args){
 	printString(args);
 	printString("\n");
@@ -108,6 +109,57 @@ void grep(const char* pattern, const char* text) {
     
     if (!found) printString("NULL\n");
 }
+
+char* itoa(int num) {
+    static char str[12];  
+    int i = 0;
+    bool is_negative = false;
+
+    if (num < 0) {
+        is_negative = true;
+        num = -num;
+    }
+
+    if (num == 0) {
+        str[i++] = '0';
+    }
+
+    while (num > 0) {
+        str[i++] = (num % 10) + '0';
+        num /= 10;
+    }
+
+    if (is_negative) {
+        str[i++] = '-';
+    }
+	
+    str[i] = '\0';
+	
+    int start = 0;
+    int end = i - 1;
+    while (start < end) {
+        char temp = str[start];
+        str[start] = str[end];
+        str[end] = temp;
+        start++;
+        end--;
+    }
+
+    return str;
+}
+
+void strcat(char* dest, const char* src) {
+    while (*dest != '\0') {
+        dest++;
+    }
+
+    while (*src != '\0') {
+        *dest++ = *src++;
+    }
+    
+    *dest = '\0';
+}
+
 void wc(const char* text) {
     int lines = 0, words = 0, chars = 0;
     bool in_word = false;
